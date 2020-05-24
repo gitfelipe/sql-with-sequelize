@@ -10,6 +10,12 @@ class UserController {
     async create(req, res) {
         const { name, email, phone, location } = req.body;
 
+        const user = await User.findOne({ where: { email: email } });
+
+        if (user) {
+            return res.status(409).send({ error: 'User already exists.' });
+        }
+
         await User.create({ name, email, phone, location });
 
         return res.json({ name, email, phone, location });
@@ -18,6 +24,12 @@ class UserController {
     async update(req, res) {
         const { id } = req.params;
         const { name, email, phone, location } = req.body;
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).send({ error: 'User not found.' });
+        }
 
         await User.update({
             name,
@@ -33,6 +45,12 @@ class UserController {
 
     async delete(req, res) {
         const { id } = req.params;
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).send({ error: 'User not found.' });
+        }
 
         await User.destroy({ where: { id: id } });
 
