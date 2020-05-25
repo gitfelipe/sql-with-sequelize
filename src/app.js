@@ -1,4 +1,5 @@
 const express = require('express');
+const { errors } = require('celebrate');
 const routes = require('./routes');
 
 require('./database');
@@ -17,6 +18,7 @@ class App {
 
     routes() {
         this.server.use(routes);
+        this.server.use(errors());
     }
 };
 
